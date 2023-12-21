@@ -1,124 +1,65 @@
-class Department {
-    protected employees: string[] = [];
+// interface Person{
+//     name: string;
+//     age: number;
 
-    constructor(private readonly id: string, private name:string) {
+//     greet(phrase: string) : void
+// }
+
+// //? cual es la diferencia entre Interface y type
+// //*con interface es super claro que queres declarar la estructura de un objeto
+// //*y podes poner un interface en una clase
+// //! por otro lado el type es mas flexible ya que sirve tambien para hacer union types
+
+// let user1: Person;
+
+// user1 = {
+//     name: 'Max',
+//     age: 30,
+//     greet(phrase: string){
+//         console.log(phrase + ' ' + this.name);
+//     }
+// }
+
+// user1.greet('Hi there - iam');
+
+//type AddFn = (a: number, b: number) => number;
+interface AddFn {
+    (a: number, b: number): number;//*asi se crea un metodo/funcion anonima dentro de una interfaz
+}
+
+let add: AddFn;
+
+add = (n1: number, n2: number) => {
+    return n1 + n2
+}
+
+interface Named {
+    readonly name?: string;
+    outputName?: string;//! propiedad opcional
+
+    funcionOpcional?(parametro: number): void//! funcion opcional
+}
+interface Greetable extends Named {
+
+    greet(phrase: string): void; //
+}
+
+class Person implements Greetable {
+    name?: string;
+
+    constructor(n: string) {
+        if (n) {
+            this.name = n; //! esta comprobacion es para no poner valores undefined si es que no se pasa ese dato al ser opcional
+        }
     }
 
-    describe(this: Department) {//! SUPER IMPORTANTE
-        //*Lo que se dice con esto es que cuando describe() se ejecuta lo que este dentro de el metodo
-        //* debe siempre referir a una instancia que se base en, en este caso la clase Department, tal como se ve en el this: Department
-        console.log(`Department ${this.id}: ${this.name}`);//! El this como parametro en un metodo dentro de un constructor es una palabra clave
-    }
-
-    addEmployee(employee: string){
-        this.employees.push(employee)
-    }
-
-    printEmployeeInfo(){
-        console.log(this.employees.length);
-        console.log(this.employees);
+    greet(phrase: string) {
+        console.log(phrase + ' ' + this.name);
     }
 }
 
-// const newDep = new Department("Sigma")
-// console.log(newDep);
+let user1: Greetable;
 
-const accounting = new Department("1", 'accounting')
+user1 = new Person("Max");
 
-accounting.describe()
-
-const accCopy = {describe: accounting.describe};
-
-// accCopy.describe()//!esto tira error ya que el this de describe que se declara arriba no hace referencia a una instancia de Department
-//!por ende el describe(this: Department) seria violado ya que en este caso no referiria un objeto de tipo Department
-
-//* esto se puede arreglar asi
-// const accCopyWork = { name: "Sexo", describe:accounting.describe}
-// accCopyWork.describe()
-
-accounting.addEmployee('max');
-accounting.addEmployee('Eve');
-
-// accounting.employees[2] = 'anna' //!No esta bueno que haya mas alternativas para agregar valores, ya que puede romper con la logica
-//? al agregar el private a employee en el class, employee ahora es solo accesible por dentro de la class, para asi no poder trabajar con el por fuera
-//? tambien sirve para metodos
-
-
-accounting.printEmployeeInfo()
-
-/*----------------------------------------------------------------- */
-
-class ExtendDepartment extends Department{
-    constructor(id: string, public admins: string[]){
-        super(id, 'IT')//! estos son los datos que se le pasan a los parametros id y name en la linea 4
-    }
-}
-
-const prueba = new ExtendDepartment('d1', ["Max"])
-
-prueba.addEmployee('Prueba employee');
-prueba.addEmployee('MIKA');
-
-prueba.describe()
-
-prueba.printEmployeeInfo()
-
-console.log(prueba);
-
-class AccountingDepartment extends Department{
-    private lastReport: string;
-
-    get mostRecentReport(){
-        if(this.lastReport){
-            return this.lastReport
-        }
-        throw new Error('No Report found')
-    }
-
-    set mostRecentReport(value: string){
-        if(!value){
-            throw new Error('Error aca')
-        }
-        this.addReports(value)
-
-    }
-
-    constructor(id: string, private reports: string[]){
-        super(id, 'Accounting');
-        this.lastReport = reports[0]
-    }
-
-    addEmployee(employee: string){
-        if( employee === 'Max'){
-            return;
-        }
-        this.employees.push(employee);
-    }
-
-    addReports(text: string){
-        this.reports.push(text)
-        this.lastReport = text
-    }
-
-    printReports() {
-        console.log(this.reports);
-    }
-}
-
-const pruebaAcc = new AccountingDepartment('d2', []);
-
-pruebaAcc.mostRecentReport = 'Mikaelaaaa'
-
-pruebaAcc.mostRecentReport = 'No se pero pruebp'
-
-pruebaAcc.addReports('Peneee');
-
-console.log(pruebaAcc.mostRecentReport);
-
-pruebaAcc.addEmployee('Max');
-
-pruebaAcc.addEmployee('Saracatunga');
-
-pruebaAcc.printReports();
-
-pruebaAcc.printEmployeeInfo()
+user1.greet('Hi iam')
