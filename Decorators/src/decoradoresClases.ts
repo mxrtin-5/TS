@@ -55,3 +55,22 @@ console.log(logString); imprime el logString que proporcionaste, que en este cas
 Cuando creas una instancia de la clase (const persona = new PersonaClass();), se ejecuta el constructor de la clase y se imprime un mensaje.
 
 console.log("Creando a Mika"); imprime el mensaje "Creando a Mika".*/
+
+//! Otro ejemplo 
+
+function Repository(target: Function){
+    target.prototype.users = [];
+
+    target.prototype.create = function (entity: object){
+        target.prototype.users.push(entity);
+    }
+}
+
+@Repository
+class UserRepository{
+
+}
+
+const user = new UserRepository();
+
+console.log(user);
